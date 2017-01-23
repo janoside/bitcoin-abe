@@ -6,10 +6,12 @@ your home directory, along with some other necessary files.
 2. Install Python 2.7 and pycrypto and python-mysqldb.  The Debian/Ubuntu packages 
 are python2.7, python-crypto, and python-mysqldb. You can use PIP 
 (python package manager) to get pycrypto; mysqldb requires (Debian/Ubuntu)
-sudo apt-get install python-mysqldb
 
-3. Install MySQL 5.x server and MySQL-Python.  On Debian/Ubuntu:
-sudo apt-get install mysql-client mysql-server
+        pip install pycrypto pymysql MySQL-python
+
+3. Install MySQL 5.x server and MySQL-Python. On Debian/Ubuntu:
+
+        sudo apt-get install mysql-client mysql-server python-mysqldb libmysqlclient-dev
 
 4. Configure the MySQL instance with InnoDB engine support.  If you
 installed with Debian/Ubuntu then InnoDB is enabled by default.  
