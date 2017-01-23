@@ -78,15 +78,15 @@ well. To save you the trouble, the following commands have been prepared to
 give you the greatest compression ratio. (NB: For the bigger tables the
 compression has been tested only on small subset of tables -- 1M rows.)
 
-ALTER TABLE txin ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
-ALTER TABLE txout ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
-ALTER TABLE block_txin ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
-ALTER TABLE tx ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=8;
-ALTER TABLE block_tx ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
-ALTER TABLE pubkey ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=8;
-ALTER TABLE block ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
-ALTER TABLE chain_candidate ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=2;
-ALTER TABLE block_next ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=2;
+        ALTER TABLE txin ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
+        ALTER TABLE txout ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
+        ALTER TABLE block_txin ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
+        ALTER TABLE tx ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=8;
+        ALTER TABLE block_tx ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
+        ALTER TABLE pubkey ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=8;
+        ALTER TABLE block ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=4;
+        ALTER TABLE chain_candidate ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=2;
+        ALTER TABLE block_next ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=2;
 
 These settings were tested on a MySQL database with binary-type=binary and
 default settings for firstbits and scripsig. Compression of a full Abe
@@ -154,13 +154,15 @@ default engine as above to ensure any new tables created during upgrades uses
 TokuDB.
 
 You should be able to convert an existing database using (UNTESTED):
-    ALTER TABLE `table` ENGINE=TokuDB;
+
+        ALTER TABLE `table` ENGINE=TokuDB;
+        
 (You may have to disable foreign key checks first)
 
 Another option is to load a SQL backup while passing the file contents trough
 sed:
 
-    cat dump.sql |sed -r 's/ENGINE=InnoDB/ENGINE=TokuDB/;s/ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=[0-9]+//' | mysql <options>
+        cat dump.sql |sed -r 's/ENGINE=InnoDB/ENGINE=TokuDB/;s/ROW_FORMAT=COMPRESSED KEY_BLOCK_SIZE=[0-9]+//' | mysql <options>
 
 For simplicity this example uses `cat`, but you should probably use
 compression on the sql file to reduce IO.
