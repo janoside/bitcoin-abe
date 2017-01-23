@@ -20,37 +20,37 @@ configuration (my.cnf or my.ini) then remove it and restart the server.
 5. Log into MySQL as root (e.g.: mysql -u root) and issue the following,
 replacing "PASSWORD" with a password you choose:
 
-    create database abe;
-    CREATE USER 'abe'@'localhost' IDENTIFIED BY 'PASSWORD';
-    grant all on abe.* to abe;
+        create database abe;
+        CREATE USER 'abe'@'localhost' IDENTIFIED BY 'PASSWORD';
+        grant all on abe.* to abe;
 
 6. Create file abe-my.conf with the following contents, replacing
 "PASSWORD" as above:
 
-    dbtype MySQLdb
-    connect-args {"user":"abe","db":"abe","passwd":"PASSWORD"}
-    upgrade
-    port 2750
+        dbtype MySQLdb
+        connect-args {"user":"abe","db":"abe","passwd":"PASSWORD"}
+        upgrade
+        port 2750
 
 7. Perform the initial data load:
 
-    python -m Abe.abe --config abe-my.conf --commit-bytes 100000 --no-serve
+        python -m Abe.abe --config abe-my.conf --commit-bytes 100000 --no-serve
 
 Look for output such as:
 
-    block_tx 1 1
-    block_tx 2 2
-    ...
+        block_tx 1 1
+        block_tx 2 2
+        ...
 
 This step may take several days depending on chain size and hardware.
 
 8. Then run the web server as:
 
-    python -m Abe.abe --config abe-my.conf
+        python -m Abe.abe --config abe-my.conf
 
 You should see:
 
-    Listening on http://localhost:2750
+        Listening on http://localhost:2750
 
 Verify the installation by browsing the URL shown.
 
@@ -98,15 +98,15 @@ copy each table above into a compressed table for each key size. You can
 add a "LIMIT <n>" at the end of the INSERT queries to set an upper limit on
 copied rows.
 
-for t in txin txout block_txin tx block_tx pubkey block chain_candidate block_next
-do
-    for l in 1 2 4 8 16
-    do
-        echo "CREATE TABLE ${t}_kbs$l like $t;"
-        echo "ALTER TABLE ${t}_kbs$l KEY_BLOCK_SIZE=$l ROW_FORMAT=COMPRESSED;"
-        echo "INSERT INTO ${t}_kbs$l SELECT * FROM $t;"
-    done
-done
+        for t in txin txout block_txin tx block_tx pubkey block chain_candidate block_next
+        do
+            for l in 1 2 4 8 16
+            do
+                echo "CREATE TABLE ${t}_kbs$l like $t;"
+                echo "ALTER TABLE ${t}_kbs$l KEY_BLOCK_SIZE=$l ROW_FORMAT=COMPRESSED;"
+                echo "INSERT INTO ${t}_kbs$l SELECT * FROM $t;"
+            done
+        done
 
 Then compare the size of your table's .ibd files for each KEY_BLOCK_SIZE.
 
@@ -142,11 +142,11 @@ TokuDB (NB: Abe will add `ENGINE=InnoDB` *only* when the default engine does
 not support transactions). To set the default engine at connect time, add the
 following option to your MySQLdb connect-args:
 
-    "init_command":"SET default_storage_engine='TokuDB'"
+        "init_command":"SET default_storage_engine='TokuDB'"
 
 Ex. if your user and database name is abe, with no password, use:
 
-    connect-args {"user":"abe","db":"abe","init_command":"SET default_storage_engine='TokuDB'"}
+        connect-args {"user":"abe","db":"abe","init_command":"SET default_storage_engine='TokuDB'"}
 
 
 There are options to convert, however you should make sure to also set the
